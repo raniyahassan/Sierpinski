@@ -64,7 +64,7 @@ int main()
 		// Clear everything from the last run frame
 		window.clear();
 		// Draw our game scene here
-        window.draw(rect); 
+        	window.draw(rect); 
 		window.display();
     }
 
