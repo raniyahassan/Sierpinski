@@ -1,72 +1,122 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <vector> 
 
 using namespace sf;
 using namespace std;
 
+
+vector<Vector2f> returnTriangle(vector<Vector2f> v, vector<Vector2f> midpoint) //Triangle: Creates midpoint and updates point vector
+{
+	int randNum = rand() % 3;
+	Vector2f temp;
+
+	temp.x = (midpoint[midpoint.size() - 1].x + v[randNum].x) / 2;
+	temp.y = (midpoint[midpoint.size() - 1].y + v[randNum].y)/2;
+	midpoint.push_back(Vector2f(temp.x, temp.y));
+
+	return midpoint;
+};
+
+vector<Vector2f> returnSquare(vector<Vector2f> v, vector<Vector2f> midpoint, int &tempNum) //Square: Creates midpoint and updates point vector
+{
+	int randNum = rand() % 4;
+	Vector2f temp;
+
+	while (tempNum == randNum) //ensures random num isnt same as last random num
+		randNum = rand() % 4;
+
+	tempNum = randNum; //updates new random num, passed by reference so saves globally
+
+	temp.x = (midpoint[midpoint.size() - 1].x + v[randNum].x) / 2;
+	temp.y = (midpoint[midpoint.size() - 1].y + v[randNum].y) / 2;
+	midpoint.push_back(Vector2f(temp.x, temp.y));
+
+	return midpoint;
+};
+
 int main()
 {
-	// Create a video mode object
-    VideoMode vm(1920, 1080);
+	srand((int)time(0));
 
-	// Create and open a window for the game
+	VideoMode vm(1920, 1080); // Create a video mode object
+	RenderWindow window(vm, "Sierpinksi Triangle!!", Style::Default); // Create and open a window for the game
+	RectangleShape rect(Vector2f{ 1,1 }); //Set the size of rectangles and color
+	rect.setFillColor(Color::White);
 
-	RenderWindow window(vm, "Sierpinski Triangle", Style::Default);
-    RectangleShape rect(Vector2f(10,10)); 
+    window.setVerticalSyncEnabled(false);
 
-    vector<Vector2f> vertices;
-    vector<Vector2f> points; 
+	vector<Vector2f> vertices;//First 3 clicks
+	vector<Vector2f> point; //4th click and beyond
 
-    Vector2f clicked;
+	Vector2f clicked; //User clicks
+	Event event;
 
-    while (window.isOpen())
+	bool endClicks = true; //Flips to stop user input after maxClicks
+	int userClicks = 0; //increments based on users Clicks
+	int maxClicks = 3; //Should be either 3 or 4 based on user input, max vertices allowed
+	int tempNum = 10; //Used for square function, makes sure random num isn't same as last random num
+    Clock clock; 
+    window.setFramerateLimit(300);
+	while (window.isOpen())  //Main Loops
 	{
-		/*
-		****************************************
-		Handle the players input
-		****************************************
-		*/
-		Event event;
-     
-		while (window.pollEvent(event))
-		{
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    std::cout << "the right button was pressed" << std::endl;
-                    std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-                    std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+        float time = clock.restart().asSeconds();
+        float fps = 1.0f / (time);
+        std::cout << "fps: " << fps << std::endl; 
 
-                    clicked.x = event.mouseButton.x; 
-                    clicked.y = event.mouseButton.y; 
-                }
-            }
-        }
-        if (Keyboard::isKeyPressed(Keyboard::Escape))
+		window.clear(); //Clear screen every frame
+
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) //Esc closes Program
 		{
 			window.close();
 		}
 
-        rect.setPosition(clicked.x, clicked.y);
-        rect.setFillColor(Color(255,182,193));
+		if (window.pollEvent(event)) //Gets user input for clicks
+		{
+			//if (event.type == sf::Event::Closed)  //Not sure what this does
+				//window.close();
 
-        /*
-		****************************************
-		Draw the scene
-		****************************************
-		*/
+			if (event.type == Event::MouseButtonPressed && endClicks == true)
+			{
+				if (event.mouseButton.button == Mouse::Left)
+				{
+					cout << "mouse x: " << event.mouseButton.x << endl;
+					cout << "mouse y: " << event.mouseButton.y << endl;
+					clicked.x = event.mouseButton.x;
+					clicked.y = event.mouseButton.y;
 
-		// Clear everything from the last run frame
-		window.clear();
-		// Draw our game scene here
-        	window.draw(rect); 
-		window.display();
-    }
+					if (userClicks < maxClicks) //Three or Four Clicks, stores in two seperate vectors
+					{
+						vertices.push_back(Vector2f(clicked.x, clicked.y));
+						point.push_back(Vector2f(clicked.x, clicked.y));
+						userClicks+= 1; //Increment towards maxClicks
+					}
+					else //Fourth or Fifth Click, bool value flips so algorithm starts and user can no longer click
+					{
+						point.push_back(Vector2f(clicked.x, clicked.y));
+						endClicks = false;
+					}
+				}
+			}
+		}
+			if (endClicks == false) //Calls algorithm function after user done inputting
+			{
+				if (maxClicks == 3)
+					point = returnTriangle(vertices, point);
+				else if (maxClicks == 4)
+					point = returnSquare(vertices, point, tempNum);
+			}
 
-    return 0; 
+            
+
+			for (int i = 0; i < point.size(); i+=1) //Draws every point stored in point vector
+			{
+				rect.setPosition(point[i].x, point[i].y);
+				window.draw(rect);
+			}
+
+			window.display(); //Display 
+
+	}
+	return 0;
 }
