@@ -35,16 +35,59 @@ vector<Vector2f> returnSquare(vector<Vector2f> v, vector<Vector2f> midpoint, int
 	return midpoint;
 };
 
+void drawer(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points)    
+{
+	for (int i = 0; i < points.size(); i+=19)
+	{
+		rectangle.setPosition(points[i].x, points[i].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+1].x, points[i+1].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+2].x, points[i+2].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+3].x, points[i+3].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+4].x, points[i+4].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+5].x, points[i+5].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+6].x, points[i+6].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+7].x, points[i+7].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+8].x, points[i+8].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+9].x, points[i+9].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+10].x, points[i+10].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+11].x, points[i+11].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+12].x, points[i+12].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+13].x, points[i+13].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+14].x, points[i+14].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+15].x, points[i+15].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+16].x, points[i+16].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+17].x, points[i+17].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+18].x, points[i+18].y);
+		win.draw(rectangle);
+	}
+}
+
 int main()
 {
 	srand((int)time(0));
 
 	VideoMode vm(1920, 1080); // Create a video mode object
 	RenderWindow window(vm, "Sierpinksi Triangle!!", Style::Default); // Create and open a window for the game
-	RectangleShape rect(Vector2f{ 1,1 }); //Set the size of rectangles and color
-	rect.setFillColor(Color::White);
-
-    window.setVerticalSyncEnabled(false);
+	RectangleShape rect(Vector2f{ 3,3 }); //Set the size of rectangles and color
+	rect.setFillColor(Color(255,182,193));
 
 	vector<Vector2f> vertices;//First 3 clicks
 	vector<Vector2f> point; //4th click and beyond
@@ -57,7 +100,18 @@ int main()
 	int maxClicks = 3; //Should be either 3 or 4 based on user input, max vertices allowed
 	int tempNum = 10; //Used for square function, makes sure random num isn't same as last random num
     Clock clock; 
-    window.setFramerateLimit(300);
+    
+	Font font;
+
+    font.loadFromFile("/usr/share/fonts/truetype/freefont/FreeSans.ttf");
+
+    Text text("    Welcome to the Chaos Game. \n\n To begin, click anywhere to create \nthree points to become your vertices. \n       Then select a fourth point.", font);
+
+    text.setCharacterSize(40);
+    text.setStyle(sf::Text::Regular);
+	text.setPosition(660,2);
+    text.setFillColor(Color::White);
+
 	while (window.isOpen())  //Main Loops
 	{
         float time = clock.restart().asSeconds();
@@ -65,6 +119,8 @@ int main()
         std::cout << "fps: " << fps << std::endl; 
 
 		window.clear(); //Clear screen every frame
+
+		window.draw(text); 
 
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) //Esc closes Program
 		{
@@ -107,16 +163,11 @@ int main()
 					point = returnSquare(vertices, point, tempNum);
 			}
 
-            
-
-			for (int i = 0; i < point.size(); i+=1) //Draws every point stored in point vector
-			{
-				rect.setPosition(point[i].x, point[i].y);
-				window.draw(rect);
-			}
+			drawer(window, rect, point); 
 
 			window.display(); //Display 
 
 	}
+
 	return 0;
 }
