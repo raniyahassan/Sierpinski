@@ -1,1 +1,1 @@
-# Sierpinski
+# Chaos-Game
