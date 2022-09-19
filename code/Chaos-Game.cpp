@@ -9,7 +9,7 @@ using namespace std;
 void returnTriangle(vector<Vector2f>& vertices, vector<Vector2f>& midpoint); //Triangle: Creates midpoint and updates point vector
 void returnSquare(vector<Vector2f>& vertices, vector<Vector2f>& midpoint, int& tempNum); //Square: Creates midpoint and updates point vector
 void returnPentagon(vector<Vector2f>& vertices, vector<Vector2f>& midpoint, int& tempNum); //Square: Creates midpoint and updates point vector
-void drawPink(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points);
+void draw(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points, string color);
 
 int main()
 {
@@ -36,6 +36,7 @@ int main()
 	int maxClicks = 0; //Sets max number of clicks based on fractal choice
 	int tempNum = 10; //Used for functions Square and Pentagon, makes sure random num isn't same as last random num
 	int speed = 75;
+	string color = ""; 
 
 	Font font; //load text, set font
 	Font font2;
@@ -55,8 +56,8 @@ int main()
 	text.setFillColor(Color::White);
 	Text text2;
 	text2.setFont(font2);
-	text2.setOrigin(-740,-550); 
-	text2.setString("press any key to continue");
+	text2.setOrigin(-730,-550); 
+	text2.setString("press the spacebar to continue");
 	text2.setCharacterSize(25);
 	text2.setFillColor(Color::White);
 
@@ -73,7 +74,20 @@ int main()
 
 		while (window.pollEvent(event)) //Gets user input for clicks and shape
 		{
-			if (event.type == Event::KeyPressed )
+			if (event.type == Event::KeyPressed)
+			{
+				text.setCharacterSize(45);
+				text.setOrigin(-385,-400);
+				text.setString("What color fractal would you like to draw?\n             Enter P for Pink.\n             Enter B for Blue.\n             Enter G for Green.");
+				text2.setString(""); 
+				if (event.type == Event::KeyPressed)
+				{
+					if (event.key.code == Keyboard::P) {color += "P"; }
+					if (event.key.code == Keyboard::B) {color += "B"; }
+					if (event.key.code == Keyboard::G) {color += "G"; }
+				}
+			}
+			if (event.type == Event::KeyPressed && (color == "P" || color == "B" || color == "G"))
 			{
 				text.setCharacterSize(45);
 				text.setOrigin(-460,-400);
@@ -126,8 +140,8 @@ int main()
 						userClicks++; //Increment towards maxClicks
 						if ((userClicks) == maxClicks)
 						{
-							text.setOrigin(-400,2); 
-							text.setString("Draw the last point to start the algorithm.");
+							text.setOrigin(-370,2); 
+							text.setString("Draw a final midpoint to start the algorithm.");
 						}
 					}
 					else //Fourth or Fifth Click, bool value flips so algorithm starts and user can no longer click
@@ -158,7 +172,7 @@ int main()
 			}
 		}
 
-		drawPink(window,rect,point);
+		draw(window, rect, point, color);
 
 		window.draw(text); //Draw text 
 		window.draw(text2);
@@ -168,11 +182,13 @@ int main()
 	return 0;
 }
 
-void drawPink(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points)
+void draw(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points, string color)
 {
+	if (color == "P") {rectangle.setFillColor(Color(244,194,194));}
+	if (color == "B") {rectangle.setFillColor(Color(145,205,230));}
+	if (color == "G") {rectangle.setFillColor(Color(175,222,183));}
 	for (int i = 0; i < points.size(); i++) //Draws every point stored in point vector
 		{
-			rectangle.setFillColor(Color(244,194,194));
 			rectangle.setPosition(points[i].x, points[i].y);
 			win.draw(rectangle);
 		}
