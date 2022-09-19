@@ -48,36 +48,34 @@ int main()
 	{
 	    cout << "Error loading font";
 	}
-	Text text;
+	Text text; // For the first line of text
 	text.setFont(font);
 	text.setOrigin(-330,-400); 
 	text.setString("WELCOME TO THE CHAOS GAME.");
 	text.setCharacterSize(85);
 	text.setFillColor(Color::White);
 	Text text2;
-	text2.setFont(font2);
+	text2.setFont(font2); // For the secondary line of text
 	text2.setOrigin(-730,-550); 
 	text2.setString("press the spacebar to continue");
 	text2.setCharacterSize(25);
 	text2.setFillColor(Color::White);
 
-	
-
-	while (window.isOpen())  //Main Loop
+	while (window.isOpen())  // Main Loop
 	{
-		window.clear(); //Clear screen every frame
+		window.clear(); // Clear screen every frame
 
-		if (Keyboard::isKeyPressed(Keyboard::Escape)) //Esc closes Program
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) // The 'esc' key will close the program
 		{
 			window.close();
 		}
 
-		while (window.pollEvent(event)) //Gets user input for clicks and shape
+		while (window.pollEvent(event)) // Gets user input for clicks, color, and shape
 		{
 			if (event.type == Event::KeyPressed)
 			{
 				text.setCharacterSize(45);
-				text.setOrigin(-385,-400);
+				text.setOrigin(-385,-400); // Changing the Origin of the text according its size and length
 				text.setString("What color fractal would you like to draw?\n             Enter P for Pink.\n             Enter B for Blue.\n             Enter G for Green.");
 				text2.setString(""); 
 				if (event.type == Event::KeyPressed)
@@ -87,7 +85,7 @@ int main()
 					if (event.key.code == Keyboard::G) {color += "G"; }
 				}
 			}
-			if (event.type == Event::KeyPressed && (color == "P" || color == "B" || color == "G"))
+			if (event.type == Event::KeyPressed && (color == "P" || color == "B" || color == "G")) // Ensuring a color is selected before continuing
 			{
 				text.setCharacterSize(45);
 				text.setOrigin(-460,-400);
@@ -133,7 +131,7 @@ int main()
 					clicked.x = event.mouseButton.x;
 					clicked.y = event.mouseButton.y;
 
-					if (userClicks < maxClicks) //Three or Four Clicks, stores in two seperate vectors
+					if (userClicks < maxClicks) // Three or Four Clicks, stores in two seperate vectors
 					{
 						vertices.push_back(Vector2f(clicked.x, clicked.y));
 						point.push_back(Vector2f(clicked.x, clicked.y));
@@ -144,7 +142,7 @@ int main()
 							text.setString("Draw a final midpoint to start the algorithm.");
 						}
 					}
-					else //Fourth or Fifth Click, bool value flips so algorithm starts and user can no longer click
+					else // Fourth or Fifth Click, bool value flips so algorithm starts and user can no longer click
 					{
 						point.push_back(Vector2f(clicked.x, clicked.y));
 						endClicks = false;
@@ -153,7 +151,7 @@ int main()
 			}
 		}
 
-		if (endClicks == false) //Calls algorithm functions after user done inputting
+		if (endClicks == false) // Calls algorithm functions after user done inputting
 		{
 			if (maxClicks == 3)
 			{
@@ -179,10 +177,11 @@ int main()
 		window.display(); //Display 
 
 	}
+	
 	return 0;
 }
 
-void draw(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points, string color)
+void draw(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points, string color) // Draws the final product
 {
 	if (color == "P") {rectangle.setFillColor(Color(244,194,194));}
 	if (color == "B") {rectangle.setFillColor(Color(145,205,230));}
@@ -194,7 +193,7 @@ void draw(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points, 
 		}
 };
 
-void returnTriangle(vector<Vector2f>& vertices, vector<Vector2f>& midpoint) //Triangle: Creates midpoint and updates point vector
+void returnTriangle(vector<Vector2f>& vertices, vector<Vector2f>& midpoint) // Triangle: Creates midpoint and updates point vector
 {
 	int randNum = rand() % 3;
 	Vector2f temp;
@@ -204,7 +203,7 @@ void returnTriangle(vector<Vector2f>& vertices, vector<Vector2f>& midpoint) //Tr
 	midpoint.push_back(Vector2f(temp.x, temp.y));
 };
 
-void returnSquare(vector<Vector2f>& vertices, vector<Vector2f>& midpoint, int& tempNum) //Square: Creates midpoint and updates point vector
+void returnSquare(vector<Vector2f>& vertices, vector<Vector2f>& midpoint, int& tempNum) // Square: Creates midpoint and updates point vector
 {
 	int randNum = rand() % 4;
 	Vector2f temp;
@@ -219,7 +218,7 @@ void returnSquare(vector<Vector2f>& vertices, vector<Vector2f>& midpoint, int& t
 	midpoint.push_back(Vector2f(temp.x, temp.y));
 };
 
-void returnPentagon(vector<Vector2f>& vertices, vector<Vector2f>& midpoint, int& tempNum) //Square: Creates midpoint and updates point vector
+void returnPentagon(vector<Vector2f>& vertices, vector<Vector2f>& midpoint, int& tempNum) // Pentagon: Creates midpoint and updates point vector
 {
 	int randNum = rand() % 5;
 	Vector2f temp;
