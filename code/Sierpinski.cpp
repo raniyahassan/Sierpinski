@@ -37,8 +37,9 @@ vector<Vector2f> returnSquare(vector<Vector2f> v, vector<Vector2f> midpoint, int
 
 void drawer(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points)    
 {
-	for (int i = 0; i < points.size(); i+=19)
+	for (int i = 0; i < points.size(); i+=21)
 	{
+		rectangle.setFillColor(Color(223,166,147));
 		rectangle.setPosition(points[i].x, points[i].y);
 		win.draw(rectangle);
 		rectangle.setPosition(points[i+1].x, points[i+1].y);
@@ -59,6 +60,8 @@ void drawer(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points
 		win.draw(rectangle);
 		rectangle.setPosition(points[i+9].x, points[i+9].y);
 		win.draw(rectangle);
+
+		rectangle.setFillColor(Color(220,110,85)); 
 		rectangle.setPosition(points[i+10].x, points[i+10].y);
 		win.draw(rectangle);
 		rectangle.setPosition(points[i+11].x, points[i+11].y);
@@ -76,6 +79,10 @@ void drawer(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points
 		rectangle.setPosition(points[i+17].x, points[i+17].y);
 		win.draw(rectangle);
 		rectangle.setPosition(points[i+18].x, points[i+18].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+19].x, points[i+19].y);
+		win.draw(rectangle);
+		rectangle.setPosition(points[i+20].x, points[i+20].y);
 		win.draw(rectangle);
 	}
 }
@@ -95,43 +102,71 @@ int main()
 	Vector2f clicked; //User clicks
 	Event event;
 
-	bool endClicks = true; //Flips to stop user input after maxClicks
-	int userClicks = 0; //increments based on users Clicks
-	int maxClicks = 3; //Should be either 3 or 4 based on user input, max vertices allowed
-	int tempNum = 10; //Used for square function, makes sure random num isn't same as last random num
-    Clock clock; 
-    
 	Font font;
 
-    font.loadFromFile("/usr/share/fonts/truetype/freefont/FreeSans.ttf");
+    font.loadFromFile("/usr/share/fonts/opentype/urw-base35/NimbusMonoPS-Regular.otf");
 
-    Text text("    Welcome to the Chaos Game. \n\n To begin, click anywhere to create \nthree points to become your vertices. \n       Then select a fourth point.", font);
+    Text text("WELCOME TO THE CHAOS GAME.", font);
 
-    text.setCharacterSize(40);
+    text.setCharacterSize(45);
     text.setStyle(sf::Text::Regular);
-	text.setPosition(660,2);
+	text.setPosition(600,2);
     text.setFillColor(Color::White);
+
+	Text input("\n\n\n Press 3 to form a triangular fractal. \n  Press 4 to form a square fractal.", font);
+	input.setCharacterSize(30);
+    input.setStyle(sf::Text::Regular);
+	input.setPosition(600,2);
+    input.setFillColor(Color::White);
+
+	Text error("\n\nError. Enter 3 or 4.", font);
+	error.setCharacterSize(20);
+    error.setStyle(sf::Text::Regular);
+	error.setPosition(660,2);
+    error.setFillColor(Color::White);
+
+	Text three("Triangular Fractal\n Draw your points.", font);
+	three.setCharacterSize(45);
+    three.setStyle(sf::Text::Regular);
+	three.setPosition(720,2);
+    three.setFillColor(Color::White);
+
+	Text four("  Square Fractal\n Draw your points.", font); 
+	four.setCharacterSize(45);
+    four.setStyle(sf::Text::Regular);
+	four.setPosition(730,2);
+    four.setFillColor(Color::White);
+
+	Text alg("Draw one more point to begin the algorithm.", font); 
+	four.setCharacterSize(45);
+    four.setStyle(sf::Text::Regular);
+	four.setPosition(250,2);
+    four.setFillColor(Color::White);
+
+	bool endClicks = true; //Flips to stop user input after maxClicks
+	int userClicks = 0; //increments based on users Clicks
+	int maxClicks = 0; //Should be either 3 or 4 based on user input, max vertices allowed
+	int tempNum = 10; //Used for square function, makes sure random num isn't same as last random num
+
+    // Clock clock; 
+	/*float time = clock.restart().asSeconds();
+        float fps = 1.0f / (time);
+        std::cout << "fps: " << fps << std::endl;  ADD above window.clear() */
+    
 
 	while (window.isOpen())  //Main Loops
 	{
-        float time = clock.restart().asSeconds();
-        float fps = 1.0f / (time);
-        std::cout << "fps: " << fps << std::endl; 
+		window.clear(); 
 
-		window.clear(); //Clear screen every frame
+		window.draw(text);
+		window.draw(input); 
 
-		window.draw(text); 
-
-		if (Keyboard::isKeyPressed(Keyboard::Escape)) //Esc closes Program
-		{
-			window.close();
-		}
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) {window.close();}
+		if (Keyboard::isKeyPressed(Keyboard::Num3)) {maxClicks = 3;}
+		if (Keyboard::isKeyPressed(Keyboard::Num4)) {maxClicks = 4;}
 
 		if (window.pollEvent(event)) //Gets user input for clicks
 		{
-			//if (event.type == sf::Event::Closed)  //Not sure what this does
-				//window.close();
-
 			if (event.type == Event::MouseButtonPressed && endClicks == true)
 			{
 				if (event.mouseButton.button == Mouse::Left)
@@ -157,16 +192,18 @@ int main()
 		}
 			if (endClicks == false) //Calls algorithm function after user done inputting
 			{
-				if (maxClicks == 3)
-					point = returnTriangle(vertices, point);
-				else if (maxClicks == 4)
-					point = returnSquare(vertices, point, tempNum);
+				if (maxClicks == 3) {
+					window.clear();
+					window.draw(three); 
+					point = returnTriangle(vertices, point); }
+				else if (maxClicks == 4) {
+					window.clear();
+					window.draw(four);
+					point = returnSquare(vertices, point, tempNum); }
 			}
 
-			drawer(window, rect, point); 
-
-			window.display(); //Display 
-
+			drawer(window, rect, point);
+			window.display(); 
 	}
 
 	return 0;
