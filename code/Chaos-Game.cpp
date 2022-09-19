@@ -16,7 +16,6 @@ int main()
 	srand((int)time(0));
 	int width = 1920;
 	int height = 1080;
-	Vector2f origin = {-440,2};
 	VideoMode vm(width, height); // Create a video mode object
 	RenderWindow window(vm, "Sierpinksi Triangle!!", Style::Default); // Create and open a window for the game
 	RectangleShape rect(Vector2f{ 1,1 }); //Set the size of rectangles and color
