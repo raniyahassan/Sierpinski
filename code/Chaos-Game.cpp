@@ -172,11 +172,11 @@ void drawPink(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> poin
 {
 	for (int i = 0; i < points.size(); i++) //Draws every point stored in point vector
 		{
-			rectangle.setFillColor(Color(223,166,147));
+			rectangle.setFillColor(Color(244,194,194));
 			rectangle.setPosition(points[i].x, points[i].y);
 			win.draw(rectangle);
 		}
-}
+};
 
 void returnTriangle(vector<Vector2f>& vertices, vector<Vector2f>& midpoint) //Triangle: Creates midpoint and updates point vector
 {
