@@ -19,7 +19,7 @@ int main()
 	VideoMode vm(width, height); // Create a video mode object
 	RenderWindow window(vm, "Sierpinksi Triangle!!", Style::Default); // Create and open a window for the game
 	RectangleShape rect(Vector2f{ 1,1 }); //Set the size of rectangles and color
-	rect.setFillColor(Color::Magenta);
+	
 
 
 	vector<Vector2f> vertices;//First 3 clicks
@@ -168,7 +168,7 @@ int main()
 					returnPentagon(vertices, point, tempNum);
 			}
 		}
-
+		
 		draw(window, rect, point, color);
 
 		window.draw(text); //Draw text 
@@ -182,9 +182,9 @@ int main()
 
 void draw(RenderWindow& win, RectangleShape rectangle, vector<Vector2f> points, string color) // Draws the final product
 {
-	if (color == "P") {rectangle.setFillColor(Color(244,194,194));}
-	if (color == "B") {rectangle.setFillColor(Color(145,205,230));}
-	if (color == "G") {rectangle.setFillColor(Color(175,222,183));}
+	if (color == "P") {rectangle.setFillColor(Color(255,0,204));}
+	if (color == "B") {rectangle.setFillColor(Color(0,115,255));}
+	if (color == "G") {rectangle.setFillColor(Color(60,195,82));}
 	for (int i = 0; i < points.size(); i++) //Draws every point stored in point vector
 		{
 			rectangle.setPosition(points[i].x, points[i].y);
